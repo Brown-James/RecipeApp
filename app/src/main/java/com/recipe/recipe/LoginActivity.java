@@ -25,8 +25,23 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.facebook.FacebookSdk;
+import com.google.firebase.auth.TwitterAuthProvider;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends AppCompatActivity {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    public static final String TWITTER_KEY = "lOBkSO8Wj6G8gZvGJirr0wgb4";
+    public static final String TWITTER_SECRET = "H3SBdwkoDF6x2Cp004lm6K1VaKnBEGA7rd8i3trTYGhrXCRD53";
 
     private static String TAG = "LOGIN";
 
@@ -36,18 +51,23 @@ public class LoginActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
 
+    private TwitterLoginButton twitterLoginButton;
     private LoginButton facebookLoginButton;
     private CallbackManager mCallbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new TwitterCore(authConfig));
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
         email = (EditText) findViewById(R.id.etxtEmail);
         password = (EditText) findViewById(R.id.etxtPassword);
         facebookLoginButton = (LoginButton) findViewById(R.id.btnLoginWithFacebook);
+        twitterLoginButton = (TwitterLoginButton) findViewById(R.id.btnLoginWithTwitter);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -91,6 +111,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        twitterLoginButton.setCallback(new Callback<TwitterSession>() {
+            @Override
+            public void success(Result<TwitterSession> result) {
+                Log.d(TAG, "twitter:success:"+result);
+                handleTwitterSession(result.data);
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Log.w(TAG, "twitterLogin:failure", exception);
+            }
+        });
 
 
     }
@@ -159,6 +191,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        twitterLoginButton.onActivityResult(requestCode, resultCode, data);
     }
 
     private void handleFacebookAccessToken(AccessToken accessToken) {
@@ -180,6 +213,33 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                         }
 
+                    }
+                });
+    }
+
+    private void handleTwitterSession(TwitterSession session) {
+        Log.d(TAG, "handTwitterSession:" + session);
+
+        TwitterAuthClient twitterAuthClient = new TwitterAuthClient();
+
+        AuthCredential credential = TwitterAuthProvider.getCredential(
+                session.getAuthToken().token,
+                session.getAuthToken().secret);
+
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithCredential:onComplete:" + task);
+
+                        // If sign in fails, display a message to the user. If sign in succeeds
+                        // the auth state listener will be notified and logic to handle the
+                        // signed in user can be handled in the listener.
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "signInWithCredential", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
