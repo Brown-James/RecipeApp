@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.TwitterAuthProvider;
+import com.google.firebase.crash.FirebaseCrash;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -182,6 +183,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         if(!task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Failed to login.", Toast.LENGTH_LONG).show();
+                            FirebaseCrash.report(new Exception("My first Android Non-Fatal error"));
                         }
                     }
                 });
