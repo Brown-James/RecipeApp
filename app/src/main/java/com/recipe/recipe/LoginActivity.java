@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.crash.FirebaseCrash;
+import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -55,12 +56,12 @@ public class LoginActivity extends AppCompatActivity {
     private TwitterLoginButton twitterLoginButton;
     private LoginButton facebookLoginButton;
     private CallbackManager mCallbackManager;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new TwitterCore(authConfig));
+        Fabric.with(this, new Twitter(authConfig));
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
@@ -124,8 +125,6 @@ public class LoginActivity extends AppCompatActivity {
                 Log.w(TAG, "twitterLogin:failure", exception);
             }
         });
-
-
     }
 
     @Override
