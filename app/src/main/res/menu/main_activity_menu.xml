@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Add Ingredient"
+        android:id="@+id/menu_main_add_ingredient"/>
+
     <item android:title="Settings"
-        android:id="@+id/settings"/>
+        android:id="@+id/menu_main_settings"/>
 
     <item android:title="Sign Out"
-        android:id="@+id/sign_out"/>
+        android:id="@+id/menu_main_sign_out"/>
 </menu>

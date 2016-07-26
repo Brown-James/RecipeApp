@@ -8,6 +8,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.twitter.sdk.android.Twitter;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +25,11 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_test);
+        MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.banner_bottom_home_unit_id));
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("9F2A3EB551323664824809D9EA0B76ED").build();
+        mAdView.loadAd(adRequest);
     }
 
     @Override
@@ -34,10 +42,13 @@ public class TestActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.settings:
+            case R.id.menu_main_settings:
                 break;
-            case R.id.sign_out:
+            case R.id.menu_main_sign_out:
                 signOut();
+            case R.id.menu_main_add_ingredient:
+                Intent i = new Intent(this, AddIngredientActivity.class);
+                startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
