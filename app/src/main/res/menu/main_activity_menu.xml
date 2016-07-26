@@ -3,6 +3,15 @@
     <item android:title="Add Ingredient"
         android:id="@+id/menu_main_add_ingredient"/>
 
+    <item android:title="Link Email"
+        android:id="@+id/menu_main_link_email"/>
+
+    <item android:title="Link Facebook"
+        android:id="@+id/menu_main_link_facebook"/>
+
+    <item android:title="Link Twitter"
+        android:id="@+id/menu_main_link_twitter"/>
+
     <item android:title="Settings"
         android:id="@+id/menu_main_settings"/>
 
