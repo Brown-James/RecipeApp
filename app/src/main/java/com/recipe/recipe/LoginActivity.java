@@ -22,6 +22,8 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.facebook.FacebookSdk;
@@ -198,23 +200,34 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+        try {
+            mAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Log.w(TAG, "signInWithCredential", task.getException());
+
+                                if(task.getException() instanceof FirebaseAuthUserCollisionException) {
+                                    Toast.makeText(getApplicationContext(), "An account already exists with the email " +
+                                            "associated to your facebook account", Toast.LENGTH_LONG).show();
+                                }
+                                else {
+                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
                         }
-
-                    }
-                });
+                    });
+        } catch (Exception e) {
+            
+        }
     }
 
     private void handleTwitterSession(TwitterSession session) {
