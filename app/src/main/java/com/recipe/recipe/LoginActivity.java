@@ -182,7 +182,6 @@ public class LoginActivity extends AppCompatActivity {
 
                         if(!task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "Failed to login.", Toast.LENGTH_LONG).show();
-                            FirebaseCrash.report(new Exception("My first Android Non-Fatal error"));
                         }
                     }
                 });
