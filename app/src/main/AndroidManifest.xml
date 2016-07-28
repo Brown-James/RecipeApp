@@ -37,11 +37,16 @@
             android:name="io.fabric.ApiKey"
             android:value="a4d72526c1e9bf3207c674db67b0324ea94dcf6a" />
 
-        <activity android:name=".AddIngredientActivity"></activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <activity android:name=".AddIngredientActivity" />
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".SettingsActivity"></activity>
     </application>
 
 </manifest>
