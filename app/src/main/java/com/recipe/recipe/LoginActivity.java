@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -58,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     private TwitterLoginButton twitterLoginButton;
     private LoginButton facebookLoginButton;
     private CallbackManager mCallbackManager;
+    private TextView logInAnonymously;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +127,28 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void failure(TwitterException exception) {
                 Log.w(TAG, "twitterLogin:failure", exception);
+            }
+        });
+
+        logInAnonymously = (TextView) findViewById(R.id.txtSignUpLater);
+        logInAnonymously.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(getApplicationContext(), "Signing in...", Toast.LENGTH_SHORT).show();
+
+                mAuth.signInAnonymously()
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Log.d(TAG, "logInAnonymously:" + task.isSuccessful());
+
+                                if(!task.isSuccessful()) {
+                                    task.getException().printStackTrace();
+                                    Toast.makeText(getApplicationContext(), "Failed to log in successfully", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
             }
         });
     }

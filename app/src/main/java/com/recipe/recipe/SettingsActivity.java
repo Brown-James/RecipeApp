@@ -156,6 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
             providers.add(info.getProviderId());
         }
 
+        // Disable the link buttons if the user is signed up with that service
         if(providers.contains("twitter.com")){
             linkTwitter.setEnabled(false);
         }
@@ -163,6 +164,13 @@ public class SettingsActivity extends AppCompatActivity {
             linkFacebook.setEnabled(false);
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
+        super.onActivityResult(requestCode, responseCode, intent);
+        twitterAuthClient.onActivityResult(requestCode, responseCode, intent);
+        callbackManager.onActivityResult(requestCode, responseCode, intent);
     }
 
     private void linkEmail() {
@@ -247,12 +255,5 @@ public class SettingsActivity extends AppCompatActivity {
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
 
         Log.d(TAG, "Facebook link done");
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int responseCode, Intent intent) {
-        super.onActivityResult(requestCode, responseCode, intent);
-        twitterAuthClient.onActivityResult(requestCode, responseCode, intent);
-        callbackManager.onActivityResult(requestCode, responseCode, intent);
     }
 }

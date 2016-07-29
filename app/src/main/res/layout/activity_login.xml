@@ -11,7 +11,8 @@
 
     <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:id="@+id/tableLayout">
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -104,8 +105,18 @@
                 android:layout_marginLeft="2dp"
                 android:textSize="20sp" />
         </TableRow>
-
     </TableLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Sign Up Later"
+        android:id="@+id/txtSignUpLater"
+        android:layout_below="@+id/tableLayout"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="10dp"
+        android:onClick="logInAnonymously" />
 
 
 </RelativeLayout>
