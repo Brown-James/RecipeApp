@@ -13,8 +13,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Link Accounts"
-        android:id="@+id/txtSettingsLinkAccount"
+        android:text="Account Management"
+        android:id="@+id/txtSettingsAccountManagement"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:text="Link Email"
         android:id="@+id/btnSettingsLinkEmail"
-        android:layout_below="@+id/txtSettingsLinkAccount"
+        android:layout_below="@+id/txtSettingsAccountManagement"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:onClick="linkEmail" />
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:text="Link Facebook"
         android:id="@+id/btnSettingsLinkFacebook"
-        android:layout_below="@+id/txtSettingsLinkAccount"
+        android:layout_below="@+id/txtSettingsAccountManagement"
         android:layout_toRightOf="@+id/btnSettingsLinkEmail"
         android:layout_toEndOf="@+id/btnSettingsLinkEmail"
         android:onClick="linkFacebook" />
@@ -47,4 +47,13 @@
         android:layout_alignTop="@+id/btnSettingsLinkFacebook"
         android:layout_toRightOf="@+id/btnSettingsLinkFacebook"
         android:layout_toEndOf="@+id/btnSettingsLinkFacebook" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Account"
+        android:id="@+id/btnSettingsDeleteAccount"
+        android:layout_below="@+id/btnSettingsLinkEmail"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

@@ -1,7 +1,9 @@
 package com.recipe.recipe;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,17 +17,22 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
@@ -33,6 +40,8 @@ import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import io.fabric.sdk.android.Fabric;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -44,12 +53,16 @@ public class SettingsActivity extends AppCompatActivity {
     private Button linkEmail;
     private Button linkFacebook;
     private Button linkTwitter;
+    private Button deleteAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
+        TwitterAuthConfig twitterAuthConfig = new TwitterAuthConfig(LoginActivity.TWITTER_KEY,
+                LoginActivity.TWITTER_SECRET);
+        Fabric.with(this, new TwitterCore(twitterAuthConfig));
 
         setContentView(R.layout.activity_settings);
 
@@ -77,6 +90,63 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 linkTwitter();
+            }
+        });
+
+        deleteAccount = (Button) findViewById(R.id.btnSettingsDeleteAccount);
+        deleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        // Create on complete listener for re-use
+                        OnCompleteListener<Void> onCompleteListener = new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(), "Account successfully deleted.", Toast.LENGTH_LONG).show();
+                                    Log.d(TAG, "User account deleted");
+
+                                    // Take the user back to the login screen and end this activity.
+                                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                                    startActivity(i);
+                                    SettingsActivity.this.finish();
+                                } else {
+                                    if (task.getException() instanceof FirebaseAuthRecentLoginRequiredException) {
+                                        Log.d(TAG, "User needs to log in again");
+                                    } else {
+                                        task.getException().printStackTrace();
+                                        Log.d(TAG, "Failed to delete user account");
+                                        Toast.makeText(getApplicationContext(), "Account deletion failed", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }
+                        };
+
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+
+                                Log.d(TAG, "Deleting user account");
+
+                                FirebaseAuth.getInstance().getCurrentUser().delete()
+                                        .addOnCompleteListener(onCompleteListener);
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                // Do nothing.
+                                Log.d(TAG, "User pressed no, doing nothing");
+
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                builder.setMessage("Are you sure you want to delete your account?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
             }
         });
 
