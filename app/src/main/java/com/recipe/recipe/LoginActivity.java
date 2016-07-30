@@ -29,6 +29,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -84,6 +89,29 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d("Tag", "onAuthStateChanged:signed_in" + user.getUid());
+
+                    final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+
+                    final String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                    Log.d(TAG, ref.child("users").child(uid).toString());
+
+                   ref.child("users").addListenerForSingleValueEvent(
+                           new ValueEventListener() {
+                               @Override
+                               public void onDataChange(DataSnapshot dataSnapshot) {
+                                   if (!dataSnapshot.hasChild(uid)) {
+                                       ref.child("users").child(uid).child("groups").child("premium")
+                                               .setValue(false);
+                                   }
+                               }
+
+                               @Override
+                               public void onCancelled(DatabaseError databaseError) {
+                                    Log.w(TAG, "Error creating database entry for user " + uid,
+                                            databaseError.toException());
+                               }
+                           }
+                   );
 
                     Intent i = new Intent(getApplicationContext(), TestActivity.class);
                     startActivity(i);

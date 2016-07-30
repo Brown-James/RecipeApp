@@ -23,14 +23,19 @@ public class RecipeUser {
 
     public static boolean isCurrentUserPremium() {
 
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Query query = ref.child("users").child(userID).child("groups").child("premium");
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                isPremium = Boolean.parseBoolean(dataSnapshot.getValue().toString());
+                try {
+                    isPremium = Boolean.parseBoolean(dataSnapshot.getValue().toString());
+                } catch (NullPointerException e) {
+                    Log.w(TAG, "This user doesn't have a premium entry: " + userID, e);
+                    isPremium = false;
+                }
             }
 
             @Override
