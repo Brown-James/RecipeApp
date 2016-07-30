@@ -2,6 +2,8 @@ package com.recipe.recipe;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.CallbackManager;
@@ -29,12 +32,7 @@ import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.TwitterAuthProvider;
 import com.google.firebase.auth.UserInfo;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.*;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
 import java.util.ArrayList;
@@ -54,6 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button linkFacebook;
     private Button linkTwitter;
     private Button deleteAccount;
+    private TextView appVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +163,12 @@ public class SettingsActivity extends AppCompatActivity {
             linkFacebook.setEnabled(false);
         }
 
+        appVersion = (TextView) findViewById(R.id.txtAppVersion);
+            // Set the text view to show the current app version for debugging purposes.
+            /*PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            appVersion.setText("Version " + info.versionName);
+            */
+            appVersion.setText("Version " + BuildConfig.VERSION_CODE + "  " + BuildConfig.VERSION_NAME);
     }
 
     @Override
