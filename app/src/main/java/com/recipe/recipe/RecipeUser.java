@@ -22,7 +22,6 @@ public class RecipeUser {
     private static String TAG = "RecipeUser";
 
     public static boolean isCurrentUserPremium() {
-
         final String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();

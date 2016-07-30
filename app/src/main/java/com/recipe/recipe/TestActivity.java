@@ -52,7 +52,7 @@ public class TestActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_test);
 
-        if(RecipeUser.isCurrentUserPremium()){
+        if(!RecipeUser.isCurrentUserPremium()){
             Log.d(TAG, "Current user isn't premium");
 
             MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.banner_bottom_home_unit_id));
