@@ -51,11 +51,16 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_test);
-        MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.banner_bottom_home_unit_id));
 
-        AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("9F2A3EB551323664824809D9EA0B76ED").build();
-        mAdView.loadAd(adRequest);
+        if(!RecipeUser.isCurrentUserPremium()){
+            Log.d(TAG, "Current user isn't premium");
+
+            MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.banner_bottom_home_unit_id));
+
+            AdView mAdView = (AdView) findViewById(R.id.adView);
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice("9F2A3EB551323664824809D9EA0B76ED").build();
+            mAdView.loadAd(adRequest);
+        }
 
         Log.d(TAG, FirebaseAuth.getInstance().getCurrentUser().getUid());
     }
