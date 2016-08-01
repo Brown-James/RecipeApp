@@ -54,6 +54,9 @@ public class SettingsActivity extends AppCompatActivity {
     private Button deleteAccount;
     private TextView appVersion;
 
+    private boolean twitterAccountLink = false;
+    private boolean facebookAccountLink = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +83,11 @@ public class SettingsActivity extends AppCompatActivity {
         linkFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                linkFacebook();
+                if(facebookAccountLink) {
+                    unlinkFacebook();
+                } else {
+                    linkFacebook();
+                }
             }
         });
 
@@ -88,7 +95,11 @@ public class SettingsActivity extends AppCompatActivity {
         linkTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                linkTwitter();
+                if(twitterAccountLink) {
+                    unlinkTwitter();
+                } else {
+                    linkTwitter();
+                }
             }
         });
 
@@ -96,11 +107,9 @@ public class SettingsActivity extends AppCompatActivity {
         deleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         // Create on complete listener for re-use
                         OnCompleteListener<Void> onCompleteListener = new OnCompleteListener<Void>() {
                             @Override
@@ -157,10 +166,12 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Disable the link buttons if the user is signed up with that service
         if(providers.contains("twitter.com")){
-            linkTwitter.setEnabled(false);
+            twitterAccountLink = true;
+            linkTwitter.setText("Unlink Twitter");
         }
         if(providers.contains("facebook.com")) {
-            linkFacebook.setEnabled(false);
+            facebookAccountLink = true;
+            linkFacebook.setText("Unlink Facebook");
         }
 
         appVersion = (TextView) findViewById(R.id.txtAppVersion);
@@ -207,6 +218,9 @@ public class SettingsActivity extends AppCompatActivity {
                                     Log.d(TAG, "Linking failed");
                                     Toast.makeText(getApplicationContext(), "Linking failed.",
                                             Toast.LENGTH_LONG).show();
+                                } else {
+                                    twitterAccountLink = true;
+                                    linkTwitter.setText("Unlink Twitter");
                                 }
                             }
                         });
@@ -241,6 +255,9 @@ public class SettingsActivity extends AppCompatActivity {
 
                                         if(!task.isSuccessful()) {
                                             Log.w(TAG, "Linking with facebook was unsuccessful.", task.getException());
+                                        } else {
+                                            facebookAccountLink = true;
+                                            linkFacebook.setText("Unlink Facebook");
                                         }
                                     }
                                 });
@@ -261,4 +278,34 @@ public class SettingsActivity extends AppCompatActivity {
 
         Log.d(TAG, "Facebook link done");
     }
+
+    private void unlinkTwitter() {
+        FirebaseAuth.getInstance().getCurrentUser().unlink("twitter.com")
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Failed to unlink Twitter from your account.", Toast.LENGTH_LONG).show();
+                        } else {
+                            linkTwitter.setText("Link Twitter");
+                            twitterAccountLink = false;
+                        }
+                    }
+                });
+    }
+
+    private void unlinkFacebook() {
+        FirebaseAuth.getInstance().getCurrentUser().unlink("facebook.com")
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(!task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Failed to unlink Facebook from your account.", Toast.LENGTH_LONG).show();
+                        } else {
+                            linkFacebook.setText("Link Facebook");
+                            facebookAccountLink = false;
+                        }
+                    }
+                });
+        }
 }
