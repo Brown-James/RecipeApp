@@ -55,6 +55,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -71,46 +72,58 @@ public class TestActivity extends AppCompatActivity {
         final LinearLayout recipeLinearLayout = (LinearLayout) findViewById(R.id.main_recipe_list);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        ref.child("recipes").child("id1")
+        ref.child("recipes")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        LayoutInflater inflater = LayoutInflater.from(TestActivity.this);
-                        final View recipeView = inflater.inflate(R.layout.recipe_menu_layout, null);
 
-                        TextView recipeNameView = (TextView) recipeView.findViewById(R.id.txtRecipeName);
-                        recipeNameView.setText(dataSnapshot.child("name").getValue().toString());
+                        Iterator<DataSnapshot> children = dataSnapshot.getChildren().iterator();
 
-                        TextView recipeDescriptionView = (TextView) recipeView.findViewById(R.id.txtRecipeDescription);
-                        recipeDescriptionView.setText(dataSnapshot.child("description").getValue().toString());
+                        while(children.hasNext()) {
+                            DataSnapshot recipe = children.next();
 
-                        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-                        StorageReference pathReference = storageReference.child("recipe_images/id1.jpg");
+                            Log.d(TAG, recipe.toString());
 
-                        final long HALF_MEGABYTE = 1024 * 1024 / 2;
-                        pathReference.getBytes(HALF_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                ImageView image = (ImageView) recipeView.findViewById(R.id.imgRecipeImage);
-                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                image.setImageBitmap(bitmap);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Something went wrong downloading image", e);
-                            }
-                        });
+                            String id = recipe.getKey();
+
+                            LayoutInflater inflater = LayoutInflater.from(TestActivity.this);
+                            final View recipeView = inflater.inflate(R.layout.recipe_menu_layout, null);
+
+                            TextView recipeNameView = (TextView) recipeView.findViewById(R.id.txtRecipeName);
+                            recipeNameView.setText(recipe.child("name").getValue().toString());
+
+                            TextView recipeDescriptionView = (TextView) recipeView.findViewById(R.id.txtRecipeDescription);
+                            recipeDescriptionView.setText(recipe.child("description").getValue().toString());
+
+                            StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                            StorageReference pathReference = storageReference.child("recipe_images/" + id + "/1.jpg");
+
+                            final ImageView image = (ImageView) recipeView.findViewById(R.id.imgRecipeImage);
+
+                            final long MEGABYTE = 1024 * 1024 * 4;
+                            pathReference.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                                @Override
+                                public void onSuccess(byte[] bytes) {
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                    image.setImageBitmap(bitmap);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Something went wrong downloading image", e);
+                                }
+                            });
 
 
-                        recipeView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Toast.makeText(getApplicationContext(), "Further recipe info coming soon", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                            recipeView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(getApplicationContext(), "Further recipe info coming soon", Toast.LENGTH_SHORT).show();
+                                }
+                            });
 
-                        recipeLinearLayout.addView(recipeView);
+                            recipeLinearLayout.addView(recipeView);
+                        }
                     }
 
                     @Override

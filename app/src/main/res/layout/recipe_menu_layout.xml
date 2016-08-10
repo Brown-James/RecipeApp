@@ -39,7 +39,6 @@
         android:outlineProvider="background"
         android:maxHeight="100dp"
         android:maxWidth="120dp"
-        android:src="@drawable/id1"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true" />
 

@@ -30,5 +30,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:showDividers="end"></LinearLayout>
+        android:showDividers="middle|beginning|end"
+        android:divider="@color/background_floating_material_dark"></LinearLayout>
 </RelativeLayout>
