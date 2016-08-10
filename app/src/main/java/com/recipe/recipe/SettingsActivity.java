@@ -9,8 +9,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
@@ -190,7 +194,54 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void linkEmail() {
-        Toast.makeText(getApplicationContext(), "Coming soon.", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getApplicationContext(), "Coming soon.", Toast.LENGTH_SHORT).show();
+
+        LayoutInflater inflater = LayoutInflater.from(this);
+
+        final View emailPasswordForm = inflater.inflate(R.layout.email_password_form, null);
+        final EditText email = (EditText) emailPasswordForm.findViewById(R.id.etxtSettingsUserEmail);
+        final EditText password = (EditText) emailPasswordForm.findViewById(R.id.etxtSettingsUserPassword);
+
+
+        DialogInterface.OnClickListener positiveClick = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String strEmail = email.getText().toString();
+                String strPassword = password.getText().toString();
+
+                if(strEmail.length() == 0 || strPassword.length() == 0) {
+                    Toast.makeText(getApplicationContext(), "E-mail or password missing", Toast.LENGTH_SHORT).show();
+                } else {
+                    AuthCredential credential = EmailAuthProvider.getCredential(strEmail, strPassword);
+
+                    FirebaseAuth.getInstance().getCurrentUser().linkWithCredential(credential)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    Log.d(TAG, "linkEmail:onClick:onComplete:" + task.isSuccessful());
+
+                                    if(!task.isSuccessful()) {
+                                        Log.w(TAG, "Failed to link email to account", task.getException());
+                                        Toast.makeText(SettingsActivity.this, "Failed to link e-mail", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                }
+            }
+        };
+
+        DialogInterface.OnClickListener negativeClick = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+        builder.setMessage("Enter email and password").setPositiveButton("Enter", positiveClick)
+                .setNegativeButton("Cancel", negativeClick).setView(emailPasswordForm).show();
+
+
     }
 
     private void linkTwitter() {

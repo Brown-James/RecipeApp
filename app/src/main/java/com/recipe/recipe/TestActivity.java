@@ -1,14 +1,21 @@
 package com.recipe.recipe;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -21,6 +28,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -28,6 +37,13 @@ import com.google.firebase.auth.FacebookAuthCredential;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.TwitterAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.twitter.sdk.android.Twitter;
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -51,6 +67,57 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_test);
+
+        final LinearLayout recipeLinearLayout = (LinearLayout) findViewById(R.id.main_recipe_list);
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("recipes").child("id1")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        LayoutInflater inflater = LayoutInflater.from(TestActivity.this);
+                        final View recipeView = inflater.inflate(R.layout.recipe_menu_layout, null);
+
+                        TextView recipeNameView = (TextView) recipeView.findViewById(R.id.txtRecipeName);
+                        recipeNameView.setText(dataSnapshot.child("name").getValue().toString());
+
+                        TextView recipeDescriptionView = (TextView) recipeView.findViewById(R.id.txtRecipeDescription);
+                        recipeDescriptionView.setText(dataSnapshot.child("description").getValue().toString());
+
+                        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                        StorageReference pathReference = storageReference.child("recipe_images/id1.jpg");
+
+                        final long HALF_MEGABYTE = 1024 * 1024 / 2;
+                        pathReference.getBytes(HALF_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                ImageView image = (ImageView) recipeView.findViewById(R.id.imgRecipeImage);
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                image.setImageBitmap(bitmap);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Something went wrong downloading image", e);
+                            }
+                        });
+
+
+                        recipeView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(getApplicationContext(), "Further recipe info coming soon", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                        recipeLinearLayout.addView(recipeView);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(getApplicationContext(), "Failed to get recipes", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         if(!RecipeUser.isCurrentUserPremium()){
             Log.d(TAG, "Current user isn't premium");

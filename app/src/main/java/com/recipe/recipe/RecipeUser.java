@@ -17,7 +17,7 @@ import com.recipe.recipe.LoginActivity;
 public class RecipeUser {
 
     // This is kind of hacky but it works ¯\_(ツ)_/¯
-    private static boolean isPremium = false;
+    private static boolean isPremium = true;
 
     private static String TAG = "RecipeUser";
 

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<GridLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:minWidth="100dp"
+        android:minHeight="100dp"
+        android:layout_rowWeight="0"
+        android:outlineProvider="background" />
+
+
+
+
+
+</GridLayout>
+-->
+
+<LinearLayout android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_row="1"
+    android:layout_column="1"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/imgRecipeImage"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_rowWeight="0"
+        android:outlineProvider="background"
+        android:maxHeight="100dp"
+        android:maxWidth="120dp"
+        android:src="@drawable/id1"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Recipe Name which is quite long"
+        android:id="@+id/txtRecipeName" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Here is where the recipe description would go"
+        android:id="@+id/txtRecipeDescription"
+        android:layout_marginTop="3dp" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
