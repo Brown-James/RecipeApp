@@ -26,6 +26,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
+import com.fernandocejas.arrow.optional.Optional;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -78,6 +79,14 @@ public class TestActivity extends AppCompatActivity {
 
         recipes = new ArrayList<Recipe>();
 
+        recipeRecyclerView = (RecyclerView) findViewById(R.id.main_recipe_list);
+        recipeRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        llm.setOrientation(LinearLayout.VERTICAL);
+        recipeRecyclerView.setLayoutManager(llm);
+        adapter = new RecipeRVAdapter(recipes);
+        recipeRecyclerView.setAdapter(adapter);
+        
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         ref.child("recipes")
                 .addListenerForSingleValueEvent(new ValueEventListener() {
@@ -94,29 +103,9 @@ public class TestActivity extends AppCompatActivity {
                             final String id = recipe.getKey();
                             final String name = recipe.child("name").getValue().toString();
                             final String description = recipe.child("description").getValue().toString();
-
-                            StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-                            StorageReference pathReference = storageReference.child("recipe_images/" + id + "/1.jpg");
-
-                            final long MEGABYTE = 1024 * 1024 * 4;
-                            pathReference.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                @Override
-                                public void onSuccess(byte[] bytes) {
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-                                    addRecipeToList(new Recipe(id, name, description, bitmap));
-
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Something went wrong downloading image", e);
-                                }
-                            });
-
-                        }
-
-                        Log.d(TAG, "Recipes size: " + recipes.size());
+                            final Optional<Bitmap> thumbnail = Optional.absent();
+                            addRecipeToList(new Recipe(getApplicationContext(), id, name, description, thumbnail, adapter));
+                    }
                     }
 
                     @Override
@@ -124,14 +113,6 @@ public class TestActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Failed to get recipes", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-        recipeRecyclerView = (RecyclerView) findViewById(R.id.main_recipe_list);
-        recipeRecyclerView.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-        llm.setOrientation(LinearLayout.VERTICAL);
-        recipeRecyclerView.setLayoutManager(llm);
-        adapter = new RecipeRVAdapter(recipes);
-        recipeRecyclerView.setAdapter(adapter);
 
         if(!RecipeUser.isCurrentUserPremium()){
             Log.d(TAG, "Current user isn't premium");
@@ -182,15 +163,7 @@ public class TestActivity extends AppCompatActivity {
     }
 
     private void addRecipeToList(Recipe r) {
-        Log.d(TAG, "Recipes size: " + recipes.size());
         recipes.add(r);
-        Log.d(TAG, "Recipes size: " + recipes.size());
-
         adapter.notifyDataSetChanged();
-    }
-
-    public void test(View view) {
-        Log.d(TAG, "There are " + recipes.size() + " items in recipes.");
-        Log.d(TAG, "There are " + adapter.getItemCount() + " items in the adapter.");
     }
 }
