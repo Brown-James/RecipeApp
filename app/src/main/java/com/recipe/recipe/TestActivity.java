@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,6 +56,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
@@ -62,6 +65,10 @@ import io.fabric.sdk.android.Fabric;
 public class TestActivity extends AppCompatActivity {
 
     private static String TAG = "TestActivity";
+    private ArrayList<Recipe> recipes;
+
+    private RecyclerView recipeRecyclerView;
+    private RecipeRVAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +76,7 @@ public class TestActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_test);
 
-        final LinearLayout recipeLinearLayout = (LinearLayout) findViewById(R.id.main_recipe_list);
+        recipes = new ArrayList<Recipe>();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         ref.child("recipes")
@@ -84,28 +91,21 @@ public class TestActivity extends AppCompatActivity {
 
                             Log.d(TAG, recipe.toString());
 
-                            String id = recipe.getKey();
-
-                            LayoutInflater inflater = LayoutInflater.from(TestActivity.this);
-                            final View recipeView = inflater.inflate(R.layout.recipe_menu_layout, null);
-
-                            TextView recipeNameView = (TextView) recipeView.findViewById(R.id.txtRecipeName);
-                            recipeNameView.setText(recipe.child("name").getValue().toString());
-
-                            TextView recipeDescriptionView = (TextView) recipeView.findViewById(R.id.txtRecipeDescription);
-                            recipeDescriptionView.setText(recipe.child("description").getValue().toString());
+                            final String id = recipe.getKey();
+                            final String name = recipe.child("name").getValue().toString();
+                            final String description = recipe.child("description").getValue().toString();
 
                             StorageReference storageReference = FirebaseStorage.getInstance().getReference();
                             StorageReference pathReference = storageReference.child("recipe_images/" + id + "/1.jpg");
-
-                            final ImageView image = (ImageView) recipeView.findViewById(R.id.imgRecipeImage);
 
                             final long MEGABYTE = 1024 * 1024 * 4;
                             pathReference.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
                                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    image.setImageBitmap(bitmap);
+
+                                    addRecipeToList(new Recipe(id, name, description, bitmap));
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -114,16 +114,9 @@ public class TestActivity extends AppCompatActivity {
                                 }
                             });
 
-
-                            recipeView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Toast.makeText(getApplicationContext(), "Further recipe info coming soon", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-
-                            recipeLinearLayout.addView(recipeView);
                         }
+
+                        Log.d(TAG, "Recipes size: " + recipes.size());
                     }
 
                     @Override
@@ -131,6 +124,14 @@ public class TestActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Failed to get recipes", Toast.LENGTH_SHORT).show();
                     }
                 });
+
+        recipeRecyclerView = (RecyclerView) findViewById(R.id.main_recipe_list);
+        recipeRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+        llm.setOrientation(LinearLayout.VERTICAL);
+        recipeRecyclerView.setLayoutManager(llm);
+        adapter = new RecipeRVAdapter(recipes);
+        recipeRecyclerView.setAdapter(adapter);
 
         if(!RecipeUser.isCurrentUserPremium()){
             Log.d(TAG, "Current user isn't premium");
@@ -180,5 +181,16 @@ public class TestActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    private void addRecipeToList(Recipe r) {
+        Log.d(TAG, "Recipes size: " + recipes.size());
+        recipes.add(r);
+        Log.d(TAG, "Recipes size: " + recipes.size());
 
+        adapter.notifyDataSetChanged();
+    }
+
+    public void test(View view) {
+        Log.d(TAG, "There are " + recipes.size() + " items in recipes.");
+        Log.d(TAG, "There are " + adapter.getItemCount() + " items in the adapter.");
+    }
 }
