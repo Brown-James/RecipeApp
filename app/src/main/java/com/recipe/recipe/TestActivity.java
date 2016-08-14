@@ -86,7 +86,7 @@ public class TestActivity extends AppCompatActivity {
         recipeRecyclerView.setLayoutManager(llm);
         adapter = new RecipeRVAdapter(recipes);
         recipeRecyclerView.setAdapter(adapter);
-        
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         ref.child("recipes")
                 .addListenerForSingleValueEvent(new ValueEventListener() {

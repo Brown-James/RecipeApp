@@ -22,8 +22,8 @@ android {
         applicationId "com.recipe.recipe"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 5
-        versionName "0.0.2-alpha"
+        versionCode 6
+        versionName "0.0.3-alpha"
     }
     buildTypes {
         release {
