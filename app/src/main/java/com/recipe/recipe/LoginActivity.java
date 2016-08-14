@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                                public void onDataChange(DataSnapshot dataSnapshot) {
                                    if (!dataSnapshot.hasChild(uid)) {
                                        ref.child("users").child(uid).child("groups").child("premium")
-                                               .setValue(false);
+                                               .setValue(true);
                                    }
                                }
 
