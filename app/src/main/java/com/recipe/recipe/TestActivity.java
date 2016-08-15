@@ -3,6 +3,7 @@ package com.recipe.recipe;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.provider.Settings.Secure;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -57,9 +59,12 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -120,7 +125,11 @@ public class TestActivity extends AppCompatActivity {
             MobileAds.initialize(getApplicationContext(), getResources().getString(R.string.banner_bottom_home_unit_id));
 
             AdView mAdView = (AdView) findViewById(R.id.adView);
-            AdRequest adRequest = new AdRequest.Builder().addTestDevice("9F2A3EB551323664824809D9EA0B76ED").build();
+            String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+            String deviceId = MD5(android_id).toUpperCase();
+            Log.d(TAG, "Dev id:" + deviceId);
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice(deviceId).build();
+            adRequest.isTestDevice(this);
             mAdView.loadAd(adRequest);
         }
 
@@ -148,6 +157,32 @@ public class TestActivity extends AppCompatActivity {
                 Intent addIngredientIntent = new Intent(this, AddIngredientActivity.class);
                 startActivity(addIngredientIntent);
                 break;
+
+            case R.id.menu_main_toggle_premium:
+                // Set the current users premium value to the opposite of what it is now
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                ref.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child("groups").child("premium").setValue(!RecipeUser.isCurrentUserPremium())
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d(TAG, "Done updating premium");
+
+                                if(!task.isSuccessful()) {
+                                    Toast.makeText(TestActivity.this, getString(R.string.main_failed_toggle_premium),
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Log.d(TAG, "isUserPremium:" + RecipeUser.isCurrentUserPremium());
+
+                                    if (RecipeUser.isCurrentUserPremium()) {
+                                        Toast.makeText(TestActivity.this, getString(R.string.main_now_premium_user), Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(TestActivity.this, getString(R.string.main_now_not_premium_user), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        });
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -165,5 +200,21 @@ public class TestActivity extends AppCompatActivity {
     private void addRecipeToList(Recipe r) {
         recipes.add(r);
         adapter.notifyDataSetChanged();
+    }
+
+    // From http://stackoverflow.com/questions/4524752/how-can-i-get-device-id-for-admob
+    // Not needed in release version
+    public String MD5(String md5) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(md5.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+        }
+        return null;
     }
 }

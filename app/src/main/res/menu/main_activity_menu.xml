@@ -3,6 +3,9 @@
     <item android:title="Add Ingredient"
         android:id="@+id/menu_main_add_ingredient"/>
 
+    <item android:title="Toggle Premium"
+        android:id="@+id/menu_main_toggle_premium"/>
+
     <item android:title="Settings"
         android:id="@+id/menu_main_settings"/>
 

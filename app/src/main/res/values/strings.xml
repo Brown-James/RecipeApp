@@ -25,4 +25,9 @@
     <string name="login_login_failed">Failed to login</string>
     <string name="login_facebook_user_email_already_exists">An account with the email associated with
     your Facebook account already exists</string>
+
+    <!-- Main -->
+    <string name="main_failed_toggle_premium">Failed to toggle premium</string>
+    <string name="main_now_premium_user">You are now a premium user</string>
+    <string name="main_now_not_premium_user">You are now not a premium user</string>
 </resources>

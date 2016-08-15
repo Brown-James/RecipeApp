@@ -5,4 +5,5 @@
     <string name="login_enter_forgot_password">Entrar</string>
     <string name="login_sign_up">Registrar</string>
     <string name="login_login">Iniciar sesión</string>
+    <string name="login_password">contraseña</string>
 </resources>
