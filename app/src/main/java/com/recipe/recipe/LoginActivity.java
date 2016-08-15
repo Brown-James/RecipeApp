@@ -170,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getApplicationContext(), "Signing in...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.login_anon_sign_in), Toast.LENGTH_SHORT).show();
 
                 mAuth.signInAnonymously()
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -180,7 +180,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 if(!task.isSuccessful()) {
                                     task.getException().printStackTrace();
-                                    Toast.makeText(getApplicationContext(), "Failed to log in successfully", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), getString(R.string.login_anon_sign_in_failed), Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -192,13 +192,13 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                builder.setTitle("Enter your email");
+                builder.setTitle(getString(R.string.login_forgot_pass_enter_email));
 
                 final EditText input = new EditText(LoginActivity.this);
                 input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
                 builder.setView(input);
 
-                builder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getString(R.string.login_enter_forgot_password), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         FirebaseAuth.getInstance().sendPasswordResetEmail(input.getText().toString())
@@ -211,20 +211,22 @@ public class LoginActivity extends AppCompatActivity {
                                             Log.d(TAG, "Failed to send password reset email");
                                             task.getException().printStackTrace();
 
-                                            Toast.makeText(getApplicationContext(), "Failed to send password reset email", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), getString(R.string.login_failed_send_password_reset_email), Toast.LENGTH_LONG).show();
                                         } else {
-                                            Toast.makeText(getApplicationContext(), "Password reset email sent to " + input.getText().toString(), Toast.LENGTH_LONG).show();
+                                            String email = input.getText().toString();
+                                            String s = getString(R.string.login_password_reset_email_sent, email);
+                                            Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 });
                     }
                 });
 
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getString(R.string.login_cancel_forgot_password), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
                         Log.d(TAG, "User cancelled forgot password operation");
-
                     }
                 });
 
@@ -252,7 +254,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.d("Tag", "Pressed sign up button");
 
         if(email.length() == 0 || password.length() == 0) {
-            Toast.makeText(getApplicationContext(), "Email or password is empty", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.login_email_or_pass_empty), Toast.LENGTH_LONG).show();
         } else {
 
             String emailStr = email.getText().toString();
@@ -268,7 +270,7 @@ public class LoginActivity extends AppCompatActivity {
                             // the auth state listener will be notified and logic to handle the
                             // signed in user can be handled in the listener.
                             if(!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Authentication Failed.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, getString(R.string.login_sign_up_failed), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
@@ -281,7 +283,7 @@ public class LoginActivity extends AppCompatActivity {
         String passwordStr = password.getText().toString();
 
         if(emailStr.length() == 0 || passwordStr.length() == 0) {
-            Toast.makeText(getApplicationContext(), "Email or password is empty", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.login_email_or_pass_empty), Toast.LENGTH_LONG).show();
         } else {
             mAuth.signInWithEmailAndPassword(emailStr, passwordStr)
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -290,7 +292,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("Tag", "signInWithEmailAndPassword:onComplete:" + task.isSuccessful());
 
                             if (!task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Failed to login.", Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this, getString(R.string.login_login_failed), Toast.LENGTH_LONG).show();
                                 Log.w(TAG, "Failed to login with email/password", task.getException());
                             }
                         }
@@ -309,7 +311,6 @@ public class LoginActivity extends AppCompatActivity {
         Log.d(TAG, "handleFacebookAccessToken:" + accessToken);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(accessToken.getToken());
-        try {
             mAuth.signInWithCredential(credential)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -323,20 +324,16 @@ public class LoginActivity extends AppCompatActivity {
                                 Log.w(TAG, "signInWithCredential", task.getException());
 
                                 if(task.getException() instanceof FirebaseAuthUserCollisionException) {
-                                    Toast.makeText(getApplicationContext(), "An account already exists with the email " +
-                                            "associated to your facebook account", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), getString(R.string.login_facebook_user_email_already_exists), Toast.LENGTH_LONG).show();
                                 }
                                 else {
-                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.makeText(LoginActivity.this, getString(R.string.login_login_failed),
                                             Toast.LENGTH_SHORT).show();
                                 }
                             }
 
                         }
                     });
-        } catch (Exception e) {
-            
-        }
     }
 
     private void handleTwitterSession(TwitterSession session) {
@@ -359,7 +356,7 @@ public class LoginActivity extends AppCompatActivity {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, getString(R.string.login_login_failed),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

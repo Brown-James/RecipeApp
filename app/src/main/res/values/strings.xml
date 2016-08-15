@@ -5,4 +5,18 @@
 
     <!-- Ads -->
     <string name="banner_bottom_home_unit_id">ca-app-pub-7329916179667730/1740126208</string>
+
+    <!-- Login -->
+    <string name="login_password_reset_email_sent">Password reset email sent to %s</string>
+    <string name="login_failed_send_password_reset_email">Failed to send password reset email</string>
+    <string name="login_enter_forgot_password">Enter</string>
+    <string name="login_cancel_forgot_password">Cancel</string>
+    <string name="login_anon_sign_in">Signing in...</string>
+    <string name="login_anon_sign_in_failed">Anonymous login failed</string>
+    <string name="login_forgot_pass_enter_email">Enter your email</string>
+    <string name="login_email_or_pass_empty">Email or password field is empty</string>
+    <string name="login_sign_up_failed">Failed to sign up</string>
+    <string name="login_login_failed">Failed to login</string>
+    <string name="login_facebook_user_email_already_exists">An account with the email associated with
+    your Facebook account already exists</string>
 </resources>
