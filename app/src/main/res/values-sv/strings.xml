@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Recipe</string>
+    <string name="login_cancel_forgot_password">Annullera</string>
+    <string name="login_login">Logga in</string>
+    <string name="login_password">lösenord</string>
+</resources>
