@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/txtAppVersion"
-        android:text="Test"
+        android:text="Version 10 0.0.7-alpha"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         />
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Account Management"
+        android:text="@string/settings_account_management_header"
         android:id="@+id/txtSettingsAccountManagement"
         android:layout_below="@id/txtAppVersion"
         android:layout_alignParentLeft="true"
@@ -32,7 +32,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Link Email"
+        android:text="@string/settings_link_email"
         android:id="@+id/btnSettingsLinkEmail"
         android:layout_below="@+id/txtSettingsAccountManagement"
         android:layout_alignParentLeft="true"
@@ -42,7 +42,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Link Facebook"
+        android:text="@string/settings_link_facebook"
         android:id="@+id/btnSettingsLinkFacebook"
         android:layout_below="@+id/txtSettingsAccountManagement"
         android:layout_toRightOf="@+id/btnSettingsLinkEmail"
@@ -52,7 +52,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Link Twitter"
+        android:text="@string/settings_link_twitter"
         android:id="@+id/btnSettingsLinkTwitter"
         android:layout_alignTop="@+id/btnSettingsLinkFacebook"
         android:layout_toRightOf="@+id/btnSettingsLinkFacebook"
@@ -61,7 +61,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Delete Account"
+        android:text="@string/settings_delete_account"
         android:id="@+id/btnSettingsDeleteAccount"
         android:layout_below="@+id/btnSettingsLinkEmail"
         android:layout_alignParentLeft="true"

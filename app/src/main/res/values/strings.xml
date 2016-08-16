@@ -37,4 +37,28 @@
     <string name="main_menu_toggle_premium">Toggle Premium</string>
     <string name="main_menu_settings">Settings</string>
     <string name="main_failed_retrieve_recipes">Failed to retrieve recipes from the server</string>
+
+    <!-- Settings -->
+    <string name="settings_account_management_header">Account Management</string>
+    <string name="settings_link_facebook">Link Facebook</string>
+    <string name="settings_unlink_facebook">Unlink Facebook</string>
+    <string name="settings_link_twitter">Link Twitter</string>
+    <string name="settings_unlink_twitter">Unlink Twitter</string>
+    <string name="settings_link_email">Link Email</string>
+    <string name="settings_unlink_email">Unlink Email</string>
+    <string name="settings_delete_account">Delete Account</string>
+    <string name="settings_account_deleted">Account successfuly deleted</string>
+    <string name="settings_failed_account_delete">Failed to delete account</string>
+    <string name="settings_delete_account_dialog_message">Are you sure you wish to delete your account? (This action cannot be reversed)</string>
+    <string name="settings_delete_account_dialog_yes">Yes</string>
+    <string name="settings_delete_account_dialog_no">No</string>
+    <string name="settings_failed_twitter_link">Failed to link account with Twitter</string>
+    <string name="settings_failed_facebook_link">Failed to link account with Facebook</string>
+    <string name="settings_failed_twitter_unlink">Failed to unlink account from Twitter</string>
+    <string name="settings_failed_facebook_unlink">Failed to unlink account from Facebook</string>
+    <string name="settings_email_or_pass_missing">Failed to link account - email or password was missing</string>
+    <string name="settings_failed_email_link">Failed to link account with given email"</string>
+    <string name="settings_link_email_dialog_message">Enter email and password</string>
+    <string name="settings_dialog_enter">Enter</string>
+    <string name="settings_dialog_cancel">Cancel</string>
 </resources>

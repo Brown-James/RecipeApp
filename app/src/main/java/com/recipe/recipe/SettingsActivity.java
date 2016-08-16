@@ -119,7 +119,8 @@ public class SettingsActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()) {
-                                    Toast.makeText(getApplicationContext(), "Account successfully deleted.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), getString(R.string.settings_account_deleted),
+                                            Toast.LENGTH_SHORT).show();
                                     Log.d(TAG, "User account deleted");
 
                                     // Take the user back to the login screen and end this activity.
@@ -132,7 +133,8 @@ public class SettingsActivity extends AppCompatActivity {
                                     } else {
                                         task.getException().printStackTrace();
                                         Log.d(TAG, "Failed to delete user account");
-                                        Toast.makeText(getApplicationContext(), "Account deletion failed", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), getString(R.string.settings_failed_account_delete),
+                                                Toast.LENGTH_LONG).show();
                                     }
                                 }
                             }
@@ -157,8 +159,9 @@ public class SettingsActivity extends AppCompatActivity {
                 };
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
-                builder.setMessage("Are you sure you want to delete your account?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                builder.setMessage(getString(R.string.settings_delete_account_dialog_message))
+                        .setPositiveButton(getString(R.string.settings_delete_account_dialog_yes), dialogClickListener)
+                        .setNegativeButton(getString(R.string.settings_delete_account_dialog_no), dialogClickListener).show();
             }
         });
 
@@ -171,11 +174,11 @@ public class SettingsActivity extends AppCompatActivity {
         // Disable the link buttons if the user is signed up with that service
         if(providers.contains("twitter.com")){
             twitterAccountLink = true;
-            linkTwitter.setText("Unlink Twitter");
+            linkTwitter.setText(getString(R.string.settings_unlink_twitter));
         }
         if(providers.contains("facebook.com")) {
             facebookAccountLink = true;
-            linkFacebook.setText("Unlink Facebook");
+            linkFacebook.setText(getString(R.string.settings_unlink_facebook));
         }
 
         appVersion = (TextView) findViewById(R.id.txtAppVersion);
@@ -183,7 +186,7 @@ public class SettingsActivity extends AppCompatActivity {
             /*PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
             appVersion.setText("Version " + info.versionName);
             */
-            appVersion.setText("Version " + BuildConfig.VERSION_CODE + "  " + BuildConfig.VERSION_NAME);
+            appVersion.setText("Version " + BuildConfig.VERSION_CODE + " - " + BuildConfig.VERSION_NAME);
     }
 
     @Override
@@ -194,8 +197,6 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void linkEmail() {
-        // Toast.makeText(getApplicationContext(), "Coming soon.", Toast.LENGTH_SHORT).show();
-
         LayoutInflater inflater = LayoutInflater.from(this);
 
         final View emailPasswordForm = inflater.inflate(R.layout.email_password_form, null);
@@ -210,7 +211,8 @@ public class SettingsActivity extends AppCompatActivity {
                 String strPassword = password.getText().toString();
 
                 if(strEmail.length() == 0 || strPassword.length() == 0) {
-                    Toast.makeText(getApplicationContext(), "E-mail or password missing", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getString(R.string.settings_email_or_pass_missing),
+                            Toast.LENGTH_LONG).show();
                 } else {
                     AuthCredential credential = EmailAuthProvider.getCredential(strEmail, strPassword);
 
@@ -222,7 +224,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                                     if(!task.isSuccessful()) {
                                         Log.w(TAG, "Failed to link email to account", task.getException());
-                                        Toast.makeText(SettingsActivity.this, "Failed to link e-mail", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SettingsActivity.this, getString(R.string.settings_failed_email_link), Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -238,8 +240,10 @@ public class SettingsActivity extends AppCompatActivity {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
-        builder.setMessage("Enter email and password").setPositiveButton("Enter", positiveClick)
-                .setNegativeButton("Cancel", negativeClick).setView(emailPasswordForm).show();
+        builder.setMessage(getString(R.string.settings_link_email_dialog_message))
+                .setPositiveButton(getString(R.string.settings_dialog_enter), positiveClick)
+                .setNegativeButton(getString(R.string.settings_dialog_cancel), negativeClick)
+                .setView(emailPasswordForm).show();
 
 
     }
@@ -267,11 +271,11 @@ public class SettingsActivity extends AppCompatActivity {
 
                                 if(!task.isSuccessful()) {
                                     Log.d(TAG, "Linking failed");
-                                    Toast.makeText(getApplicationContext(), "Linking failed.",
+                                    Toast.makeText(getApplicationContext(), getString(R.string.settings_failed_twitter_link),
                                             Toast.LENGTH_LONG).show();
                                 } else {
                                     twitterAccountLink = true;
-                                    linkTwitter.setText("Unlink Twitter");
+                                    linkTwitter.setText(getString(R.string.settings_unlink_twitter));
                                 }
                             }
                         });
@@ -306,9 +310,11 @@ public class SettingsActivity extends AppCompatActivity {
 
                                         if(!task.isSuccessful()) {
                                             Log.w(TAG, "Linking with facebook was unsuccessful.", task.getException());
+                                            Toast.makeText(SettingsActivity.this, getString(R.string.settings_failed_facebook_link),
+                                                    Toast.LENGTH_SHORT).show();
                                         } else {
                                             facebookAccountLink = true;
-                                            linkFacebook.setText("Unlink Facebook");
+                                            linkFacebook.setText(getString(R.string.settings_unlink_facebook));
                                         }
                                     }
                                 });
@@ -336,9 +342,10 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Failed to unlink Twitter from your account.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.settings_failed_twitter_unlink),
+                                    Toast.LENGTH_LONG).show();
                         } else {
-                            linkTwitter.setText("Link Twitter");
+                            linkTwitter.setText(getString(R.string.settings_link_twitter));
                             twitterAccountLink = false;
                         }
                     }
@@ -351,9 +358,10 @@ public class SettingsActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(!task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Failed to unlink Facebook from your account.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.settings_failed_facebook_unlink),
+                                    Toast.LENGTH_LONG).show();
                         } else {
-                            linkFacebook.setText("Link Facebook");
+                            linkFacebook.setText(getString(R.string.settings_link_facebook));
                             facebookAccountLink = false;
                         }
                     }
