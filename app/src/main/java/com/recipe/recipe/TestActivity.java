@@ -76,6 +76,8 @@ public class TestActivity extends AppCompatActivity {
     private RecyclerView recipeRecyclerView;
     private RecipeRVAdapter adapter;
 
+    private boolean isPremium;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,12 +112,12 @@ public class TestActivity extends AppCompatActivity {
                             final String description = recipe.child("description").getValue().toString();
                             final Optional<Bitmap> thumbnail = Optional.absent();
                             addRecipeToList(new Recipe(getApplicationContext(), id, name, description, thumbnail, adapter));
-                    }
+                        }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        Toast.makeText(getApplicationContext(), "Failed to get recipes", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.main_failed_retrieve_recipes), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -159,29 +161,7 @@ public class TestActivity extends AppCompatActivity {
                 break;
 
             case R.id.menu_main_toggle_premium:
-                // Set the current users premium value to the opposite of what it is now
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-                ref.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                        .child("groups").child("premium").setValue(!RecipeUser.isCurrentUserPremium())
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Log.d(TAG, "Done updating premium");
-
-                                if(!task.isSuccessful()) {
-                                    Toast.makeText(TestActivity.this, getString(R.string.main_failed_toggle_premium),
-                                            Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Log.d(TAG, "isUserPremium:" + RecipeUser.isCurrentUserPremium());
-
-                                    if (RecipeUser.isCurrentUserPremium()) {
-                                        Toast.makeText(TestActivity.this, getString(R.string.main_now_premium_user), Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(TestActivity.this, getString(R.string.main_now_not_premium_user), Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            }
-                        });
+                togglePremium();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -202,8 +182,41 @@ public class TestActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    private boolean togglePremium() {
+        // Get the most recent value
+        isPremium = RecipeUser.isCurrentUserPremium();
+
+        // Set the current users premium value to the opposite of what it is now
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        ref.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .child("groups").child("premium").setValue(!isPremium)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(!task.isSuccessful()) {
+                            // Something has gone wrong
+                            Toast.makeText(TestActivity.this, getString(R.string.main_failed_toggle_premium),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Toggle our local copy
+                            isPremium = !isPremium;
+
+                            if (isPremium) {
+                                Toast.makeText(TestActivity.this, getString(R.string.main_now_premium_user), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(TestActivity.this, getString(R.string.main_now_not_premium_user), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                });
+
+        // Return the new value of isPremium
+        return isPremium;
+    }
+
     // From http://stackoverflow.com/questions/4524752/how-can-i-get-device-id-for-admob
-    // Not needed in release version
+    // Not needed in release version - used to show ensure every single user is shown
+    // a test ad during development
     public String MD5(String md5) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Add Ingredient"
+    <item android:title="@string/main_menu_add_ingredient"
         android:id="@+id/menu_main_add_ingredient"/>
 
-    <item android:title="Toggle Premium"
+    <item android:title="@string/main_menu_toggle_premium"
         android:id="@+id/menu_main_toggle_premium"/>
 
-    <item android:title="Settings"
+    <item android:title="@string/main_menu_settings"
         android:id="@+id/menu_main_settings"/>
 
-    <item android:title="Sign Out"
+    <item android:title="@string/main_menu_logout"
         android:id="@+id/menu_main_sign_out"/>
 </menu>

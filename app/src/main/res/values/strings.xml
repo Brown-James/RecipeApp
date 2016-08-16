@@ -30,4 +30,11 @@
     <string name="main_failed_toggle_premium">Failed to toggle premium</string>
     <string name="main_now_premium_user">You are now a premium user</string>
     <string name="main_now_not_premium_user">You are now not a premium user</string>
+
+    <!-- Menu Main -->
+    <string name="main_menu_add_ingredient">Add Ingredient</string>
+    <string name="main_menu_logout">Logout</string>
+    <string name="main_menu_toggle_premium">Toggle Premium</string>
+    <string name="main_menu_settings">Settings</string>
+    <string name="main_failed_retrieve_recipes">Failed to retrieve recipes from the server</string>
 </resources>
