@@ -61,4 +61,20 @@
     <string name="settings_link_email_dialog_message">Enter email and password</string>
     <string name="settings_dialog_enter">Enter</string>
     <string name="settings_dialog_cancel">Cancel</string>
+
+    <!-- Lorem Ipsum -->
+    <string name="lorem_ipsum">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ut est diam. Pellentesque tempor orci et purus euismod auctor eu a velit. Cras semper placerat mollis. Morbi ullamcorper lectus blandit, pulvinar nunc vel, pellentesque lectus. Nunc vulputate viverra lacinia. Nullam elementum sed lectus nec finibus. Vestibulum sem purus, tempor sit amet egestas a, fringilla quis ante.
+
+Nam id tristique nibh. In ultrices in turpis mattis faucibus. Aenean a dapibus nisi, in accumsan sapien. Proin sed leo eu lectus porttitor euismod. Morbi molestie aliquet justo, a fringilla diam mattis id. Vestibulum ut enim mi. Vivamus hendrerit nibh nisi, sit amet iaculis sapien rhoncus quis. Nunc in purus ligula. Etiam aliquet risus urna, a sodales nulla ornare quis. Aliquam elit lectus, dapibus non iaculis eget, vestibulum a elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris in iaculis ante, a dictum augue.
+
+Integer sit amet purus eu nunc ornare pharetra. Nulla a urna feugiat, venenatis diam id, volutpat dui. In hac habitasse platea dictumst. Etiam sit amet convallis dui. Phasellus efficitur justo quis pharetra placerat. Aliquam dapibus nulla non scelerisque faucibus. Nunc iaculis, nunc vel tempor iaculis, enim ligula tempus felis, sit amet sodales est mi vitae lectus. Nunc in arcu in mauris convallis finibus. Praesent facilisis neque id magna tincidunt venenatis. Aliquam erat volutpat.
+
+Sed in quam eu mi consectetur dignissim at eu justo. Quisque egestas erat ut metus convallis, nec vestibulum ligula egestas. Sed sit amet nisi sit amet ante ullamcorper efficitur sit amet vel nisl. Sed nulla tellus, semper ut justo vel, faucibus ultricies libero. Mauris rutrum lacus in ante vestibulum, eu sodales nibh luctus. Quisque ipsum tortor, interdum nec pretium maximus, dictum nec velit. Fusce eget odio sed quam lobortis tempus ac vitae tortor. Nullam mattis pulvinar odio, et pellentesque est mattis eu. Curabitur nec placerat velit.
+
+Donec eget leo metus. Curabitur lorem enim, luctus at gravida et, condimentum eu diam. Curabitur aliquet cursus congue. Aenean at nunc varius, consequat diam eget, malesuada nunc. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Duis volutpat interdum sapien a varius. Sed quis nibh non erat pretium pretium. Aenean vulputate, risus et volutpat facilisis, felis metus ultricies diam, ut suscipit eros velit sit amet sem. Nunc malesuada at risus ac scelerisque. Fusce eget elementum quam. Sed ultrices odio et massa tempus elementum. Ut ut nunc ut sem pretium fermentum. Pellentesque tincidunt, orci eu ultrices iaculis, mi sem sagittis orci, sit amet sagittis ipsum augue id nunc. Sed nisl sapien, ultricies ut turpis nec, scelerisque vehicula diam.
+    </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

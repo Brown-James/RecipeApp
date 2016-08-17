@@ -1,5 +1,6 @@
 package com.recipe.recipe;
 
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,7 +31,9 @@ public class RecipeRVAdapter extends RecyclerView.Adapter<RecipeRVAdapter.Recipe
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(p.getContext(), "Further recipe info coming soon...", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(p.getContext(), "Further recipe info coming soon...", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(p.getContext(), RecipeInfoActivity.class);
+                p.getContext().startActivity(i);
             }
         });
         RecipeViewHolder rvh = new RecipeViewHolder(v);
