@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by James on 13/08/2016.
  */
-public class RecipeRVAdapter extends RecyclerView.Adapter<RecipeRVAdapter.RecipeViewHolder> {
+public class RecipeRVAdapter extends RecyclerView.Adapter<RecipeRVAdapter.RecipeViewHolder>
+    implements Observer {
+
+    private static String TAG = "RecipeRVAdapter";
 
     Context context;
     List<Recipe> recipes;
@@ -37,6 +43,7 @@ public class RecipeRVAdapter extends RecyclerView.Adapter<RecipeRVAdapter.Recipe
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int i) {
         final Recipe r = recipes.get(i);
+        r.addObserver(this);
 
         holder.recipeName.setText(r.getName());
         holder.recipeDescription.setText(r.getDescription());
@@ -53,6 +60,11 @@ public class RecipeRVAdapter extends RecyclerView.Adapter<RecipeRVAdapter.Recipe
                 context.startActivity(i);
             }
         });
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        notifyDataSetChanged();
     }
 
     @Override

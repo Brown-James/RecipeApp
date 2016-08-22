@@ -47,20 +47,8 @@ public class Recipe extends Observable{
         this.context = context;
     }
 
-    public Recipe(Context context, String id, String name, String description, Optional<Bitmap> thumbnail, RecipeRVAdapter adapter) {
-        this.name = name;
-        this.description = description;
-        this.id = id;
-
-        if(thumbnail.isPresent()) {
-            this.thumbnail = thumbnail.get();
-        } else {
-            this.thumbnail = BitmapFactory.decodeResource(context.getResources(), R.drawable.loading_thumb);
-            downloadThumbnail();
-        }
-
-        this.adapter = adapter;
-        this.context = context;
+    public String getId() {
+        return id;
     }
 
     public String getName() {
@@ -77,10 +65,6 @@ public class Recipe extends Observable{
 
     private void setThumbnail(Bitmap b) {
         this.thumbnail = b;
-
-        if(adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
 
         setChanged();
         notifyObservers();
@@ -132,8 +116,7 @@ public class Recipe extends Observable{
     }
 
     // From https://developer.android.com/training/displaying-bitmaps/load-bitmap.html
-    public static int calculateInSampleSize(
-            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
@@ -163,7 +146,4 @@ public class Recipe extends Observable{
         return px;
     }
 
-    public String getId() {
-        return id;
-    }
 }

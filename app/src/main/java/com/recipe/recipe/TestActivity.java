@@ -111,7 +111,7 @@ public class TestActivity extends AppCompatActivity {
                             final String name = recipe.child("name").getValue().toString();
                             final String description = recipe.child("description").getValue().toString();
                             final Optional<Bitmap> thumbnail = Optional.absent();
-                            addRecipeToList(new Recipe(getApplicationContext(), id, name, description, thumbnail, adapter));
+                            addRecipeToList(new Recipe(getApplicationContext(), id, name, description, thumbnail));
                         }
                     }
 

@@ -322,6 +322,7 @@ public class FlexibleSpaceHeaderFragment extends Fragment implements Observer, O
 
     @Override
     public void update(Observable observable, Object data) {
+        // Update to the newest bitmap
         image.setImageBitmap(recipe.getThumbnail());
     }
 }
