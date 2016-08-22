@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,7 +32,10 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollViewCal
 import com.github.ksoichiro.android.observablescrollview.ScrollState;
 import com.nineoldandroids.view.ViewHelper;
 
-public class FlexibleSpaceHeaderFragment extends Fragment implements ObservableScrollViewCallbacks {
+import java.util.Observable;
+import java.util.Observer;
+
+public class FlexibleSpaceHeaderFragment extends Fragment implements Observer, ObservableScrollViewCallbacks {
     public static final String TAG = "FlexibleSpaceHeaderFragment";
 
     @InjectView (R.id.observable_sv)
@@ -49,6 +53,9 @@ public class FlexibleSpaceHeaderFragment extends Fragment implements ObservableS
     @InjectView(R.id.fl_image)
     protected FrameLayout flImage; // Layout that hosts the header image
 
+    @InjectView(R.id.imgRecipeInfoImage)
+    ImageView image;
+
     private int mParralaxImageHeight;
     private int mScrollY;
     private boolean mIsToolbarShown = true;
@@ -56,6 +63,8 @@ public class FlexibleSpaceHeaderFragment extends Fragment implements ObservableS
     private boolean goingUp = false;
 
     private int mToolbarBackgroundColour;
+
+    private Recipe recipe;
 
     public FlexibleSpaceHeaderFragment() {
     }
@@ -71,6 +80,15 @@ public class FlexibleSpaceHeaderFragment extends Fragment implements ObservableS
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_flexible_space_header, container, false);
         ButterKnife.inject(this, view);
+
+        RecipeInfoActivity activity = (RecipeInfoActivity) getActivity();
+        recipe = activity.getRecipe();
+
+        mTitle.setText(recipe.getName());
+        image.setImageBitmap(recipe.getThumbnail());
+
+        // Observe the recipe - will see change in bitmap as its proper picture downloads fully
+        recipe.addObserver(this);
 
         return view;
     }
@@ -300,5 +318,10 @@ public class FlexibleSpaceHeaderFragment extends Fragment implements ObservableS
         int maxTitleTranslation = (int) (mParralaxImageHeight * 0.4f);
         int titleTranslation = (int) (maxTitleTranslation * ((float) scale / maxScale));
         ViewHelper.setTranslationY(mTitle, titleTranslation);
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        image.setImageBitmap(recipe.getThumbnail());
     }
 }

@@ -15,10 +15,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Observable;
+
 /**
  * Created by James on 13/08/2016.
  */
-public class Recipe {
+public class Recipe extends Observable{
 
     private static String TAG = "Recipe";
 
@@ -29,6 +31,21 @@ public class Recipe {
     Bitmap thumbnail;
 
     Context context;
+
+    public Recipe(Context context, String id, String name, String description, Optional<Bitmap> thumbnail) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+
+        if(thumbnail.isPresent()) {
+            this.thumbnail = thumbnail.get();
+        } else {
+            this.thumbnail = BitmapFactory.decodeResource(context.getResources(), R.drawable.loading_thumb);
+            downloadThumbnail();
+        }
+
+        this.context = context;
+    }
 
     public Recipe(Context context, String id, String name, String description, Optional<Bitmap> thumbnail, RecipeRVAdapter adapter) {
         this.name = name;
@@ -60,7 +77,13 @@ public class Recipe {
 
     private void setThumbnail(Bitmap b) {
         this.thumbnail = b;
-        adapter.notifyDataSetChanged();
+
+        if(adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+
+        setChanged();
+        notifyObservers();
     }
 
     public void downloadThumbnail() {
@@ -138,5 +161,9 @@ public class Recipe {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return px;
+    }
+
+    public String getId() {
+        return id;
     }
 }

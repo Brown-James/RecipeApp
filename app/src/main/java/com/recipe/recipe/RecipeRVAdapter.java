@@ -1,5 +1,6 @@
 package com.recipe.recipe;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import java.util.List;
  */
 public class RecipeRVAdapter extends RecyclerView.Adapter<RecipeRVAdapter.RecipeViewHolder> {
 
+    Context context;
     List<Recipe> recipes;
 
     public RecipeRVAdapter(List<Recipe> recipes) {
@@ -25,26 +27,32 @@ public class RecipeRVAdapter extends RecyclerView.Adapter<RecipeRVAdapter.Recipe
 
     @Override
     public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_menu_layout, parent, false);
+        context = parent.getContext();
 
-        final ViewGroup p = parent;
-        v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Toast.makeText(p.getContext(), "Further recipe info coming soon...", Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(p.getContext(), RecipeInfoActivity.class);
-                p.getContext().startActivity(i);
-            }
-        });
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_menu_layout, parent, false);
         RecipeViewHolder rvh = new RecipeViewHolder(v);
         return rvh;
     }
 
     @Override
     public void onBindViewHolder(RecipeViewHolder holder, int i) {
-        holder.recipeName.setText(recipes.get(i).getName());
-        holder.recipeDescription.setText(recipes.get(i).getDescription());
-        holder.thumbnail.setImageBitmap(recipes.get(i).getThumbnail());
+        final Recipe r = recipes.get(i);
+
+        holder.recipeName.setText(r.getName());
+        holder.recipeDescription.setText(r.getDescription());
+        holder.thumbnail.setImageBitmap(r.getThumbnail());
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context, RecipeInfoActivity.class);
+                i.putExtra("name", r.getName());
+                i.putExtra("description", r.getDescription());
+                i.putExtra("id", r.getId());
+
+                context.startActivity(i);
+            }
+        });
     }
 
     @Override
