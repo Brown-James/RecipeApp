@@ -12,10 +12,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -24,6 +26,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -36,13 +39,16 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class FlexibleSpaceHeaderFragment extends Fragment implements Observer, ObservableScrollViewCallbacks {
-    public static final String TAG = "FlexibleSpaceHeaderFragment";
+    public static final String TAG = "FlexibleSpaceHeaderFrag";
 
     @InjectView (R.id.observable_sv)
     ObservableScrollViewWithFling mScrollView;
 
     @InjectView(R.id.title)
     TextView mTitle; // Title used instead of Toolbar.title
+
+    @InjectView(R.id.tv_data)
+    TextView mDescription;
 
     @InjectView(R.id.toolbar_view)
     Toolbar mToolbarView;
@@ -86,6 +92,7 @@ public class FlexibleSpaceHeaderFragment extends Fragment implements Observer, O
 
         mTitle.setText(recipe.getName());
         image.setImageBitmap(recipe.getThumbnail());
+        mDescription.setText(recipe.getDescription() + "\n\n" + getString(R.string.lorem_ipsum));
 
         // Observe the recipe - will see change in bitmap as its proper picture downloads fully
         recipe.addObserver(this);
@@ -99,6 +106,15 @@ public class FlexibleSpaceHeaderFragment extends Fragment implements Observer, O
 
         // Store flexible space height
         mParralaxImageHeight = getResources().getDimensionPixelSize(R.dimen.parallax_image_height);
+
+        flImage.post(new Runnable() {
+
+            @Override
+            public void run() {
+                Log.d(TAG, "Width: " + flImage.getWidth() + " Height: " + flImage.getHeight());
+                recipe.downloadThumbnail(flImage.getWidth(), flImage.getHeight() + mParralaxImageHeight);
+            }
+        });
 
         configureToolbarView();
         configureScrollView();
@@ -139,13 +155,6 @@ public class FlexibleSpaceHeaderFragment extends Fragment implements Observer, O
 
     private void configureToolbarView() {
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbarView);
-        mToolbarView.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        mToolbarView.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
 
         // Remove toolbars title, as we have our own title implementation
         mToolbarView.post(new Runnable() {
@@ -167,7 +176,22 @@ public class FlexibleSpaceHeaderFragment extends Fragment implements Observer, O
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.main_activity_menu, menu);
+        inflater.inflate(R.menu.recipe_info_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_recipe_info_share:
+                Toast.makeText(getActivity(), "Coming soon.", Toast.LENGTH_SHORT).show();
+                break;
+
+            case R.id.menu_recipe_info_favourite:
+                Toast.makeText(getActivity(), "Coming soon.", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

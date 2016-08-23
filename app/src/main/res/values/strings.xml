@@ -77,4 +77,6 @@ Donec eget leo metus. Curabitur lorem enim, luctus at gravida et, condimentum eu
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="recipeInfo_menu_share">Share</string>
+    <string name="recipeInfo_menu_favourite">Favourite</string>
 </resources>

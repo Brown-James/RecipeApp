@@ -25,9 +25,8 @@
                     android:id="@+id/imgRecipeInfoImage"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/parallax_image_height"
-                    android:scaleType="fitCenter"
                     android:src="@drawable/id1"
-                    />
+                    android:scaleType="centerCrop" />
                 <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -96,7 +95,7 @@
             android:maxLines="1"
             android:minHeight="?attr/actionBarSize"
             android:maxHeight="?attr/actionBarSize"
-            android:textColor="@android:color/primary_text_light"
+            android:textColor="@android:color/white"
             android:background="@android:color/transparent"
             android:textSize="16sp" />
 

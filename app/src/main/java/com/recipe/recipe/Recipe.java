@@ -30,6 +30,8 @@ public class Recipe extends Observable{
     String id;
     Bitmap thumbnail;
 
+    boolean thumbnailDownloaded = false;
+
     Context context;
 
     public Recipe(Context context, String id, String name, String description, Optional<Bitmap> thumbnail) {
@@ -41,7 +43,6 @@ public class Recipe extends Observable{
             this.thumbnail = thumbnail.get();
         } else {
             this.thumbnail = BitmapFactory.decodeResource(context.getResources(), R.drawable.loading_thumb);
-            downloadThumbnail();
         }
 
         this.context = context;
@@ -70,7 +71,12 @@ public class Recipe extends Observable{
         notifyObservers();
     }
 
-    public void downloadThumbnail() {
+    /**
+     * Downloads the image associated to the recipe
+     * @param widthPx The width in pixels for the image to be
+     * @param heightPx The height in pixels for the image to be
+     */
+    public void downloadThumbnail(final int widthPx, final int heightPx) {
         Log.d(TAG, "Downloading thumbnail from recipe_images/" + id + "/1.jpg");
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -90,13 +96,13 @@ public class Recipe extends Observable{
 
                 Log.d(TAG, "Height: " + imageHeight + "  Width: " + imageWidth + "  Type: " + imageType);
 
-                // I don't like these random numbers - to be fixed!
+                /*// I don't like these random numbers - to be fixed!
                 int pxWidth = (int) Math.ceil(Double.parseDouble(String.valueOf(convertDpToPixel(120f, context))));
-                int pxHeight = (int) Math.ceil(Double.parseDouble(String.valueOf(convertDpToPixel(100f, context))));
+                int pxHeight = (int) Math.ceil(Double.parseDouble(String.valueOf(convertDpToPixel(100f, context))));*/
 
-                Log.d(TAG, "Px Width: " + pxWidth + "  Height: " + pxHeight);
+                Log.d(TAG, "Px Width: " + widthPx + "  Height: " + heightPx);
 
-                options.inSampleSize = calculateInSampleSize(options, pxWidth, pxHeight);
+                options.inSampleSize = calculateInSampleSize(options, widthPx, heightPx);
 
                 Log.d(TAG, "Sample Size: " + options.inSampleSize);
 
@@ -104,7 +110,9 @@ public class Recipe extends Observable{
                 Bitmap b = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, options);
 
                 Log.d(TAG, "Compressed Height: " + b.getHeight() + "  Width: " + b.getWidth());
+
                 setThumbnail(b);
+                thumbnailDownloaded = true;
 
             }
         }).addOnFailureListener(new OnFailureListener() {

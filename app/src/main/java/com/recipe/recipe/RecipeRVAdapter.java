@@ -1,7 +1,9 @@
 package com.recipe.recipe;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -48,6 +50,13 @@ public class RecipeRVAdapter extends RecyclerView.Adapter<RecipeRVAdapter.Recipe
         holder.recipeName.setText(r.getName());
         holder.recipeDescription.setText(r.getDescription());
         holder.thumbnail.setImageBitmap(r.getThumbnail());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
+                !r.thumbnailDownloaded) {
+            r.downloadThumbnail(holder.thumbnail.getMaxWidth(), holder.thumbnail.getMaxHeight());
+        } else {
+            // Write some code here to deal with lower APIs
+        }
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
