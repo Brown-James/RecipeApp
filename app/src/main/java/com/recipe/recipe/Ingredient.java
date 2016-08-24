@@ -20,4 +20,9 @@ public class Ingredient {
     public String getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + id + "  name: " + name;
+    }
 }
