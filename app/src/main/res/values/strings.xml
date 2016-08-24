@@ -57,13 +57,13 @@
     <string name="settings_failed_twitter_unlink">Failed to unlink account from Twitter</string>
     <string name="settings_failed_facebook_unlink">Failed to unlink account from Facebook</string>
     <string name="settings_email_or_pass_missing">Failed to link account - email or password was missing</string>
-    <string name="settings_failed_email_link">Failed to link account with given email"</string>
+    <string name="settings_failed_email_link">Failed to link account with given email</string>
     <string name="settings_link_email_dialog_message">Enter email and password</string>
     <string name="settings_dialog_enter">Enter</string>
     <string name="settings_dialog_cancel">Cancel</string>
 
     <!-- Lorem Ipsum -->
-    <string name="lorem_ipsum">
+    <string name="lorem_ipsum" translatable="false">
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ut est diam. Pellentesque tempor orci et purus euismod auctor eu a velit. Cras semper placerat mollis. Morbi ullamcorper lectus blandit, pulvinar nunc vel, pellentesque lectus. Nunc vulputate viverra lacinia. Nullam elementum sed lectus nec finibus. Vestibulum sem purus, tempor sit amet egestas a, fringilla quis ante.
 
 Nam id tristique nibh. In ultrices in turpis mattis faucibus. Aenean a dapibus nisi, in accumsan sapien. Proin sed leo eu lectus porttitor euismod. Morbi molestie aliquet justo, a fringilla diam mattis id. Vestibulum ut enim mi. Vivamus hendrerit nibh nisi, sit amet iaculis sapien rhoncus quis. Nunc in purus ligula. Etiam aliquet risus urna, a sodales nulla ornare quis. Aliquam elit lectus, dapibus non iaculis eget, vestibulum a elit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris in iaculis ante, a dictum augue.
@@ -79,4 +79,5 @@ Donec eget leo metus. Curabitur lorem enim, luctus at gravida et, condimentum eu
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="recipeInfo_menu_share">Share</string>
     <string name="recipeInfo_menu_favourite">Favourite</string>
+    <string name="main_menu_suggest_recipe">Suggest me a recipe</string>
 </resources>

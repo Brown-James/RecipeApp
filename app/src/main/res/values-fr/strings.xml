@@ -6,4 +6,6 @@
     <string name="login_login">Entrer</string>
     <string name="login_sign_up"> S\'inscrire</string>
     <string name="login_password">mot de passe</string>
+    <string name="settings_delete_account_dialog_yes">Oui</string>
+    <string name="settings_delete_account_dialog_no">No</string>
 </resources>

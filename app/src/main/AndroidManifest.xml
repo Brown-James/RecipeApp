@@ -47,8 +47,8 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".SettingsActivity" />
-        <activity android:name="com.recipe.recipe.RecipeInfoActivity">
-        </activity>
+        <activity android:name=".RecipeInfoActivity"></activity>
+        <activity android:name=".SuggestRecipeActivity"></activity>
     </application>
 
 </manifest>

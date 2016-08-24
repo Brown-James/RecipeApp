@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/main_menu_suggest_recipe"
+        android:id="@+id/menu_main_suggest_recipe"/>
+
     <item android:title="@string/main_menu_add_ingredient"
         android:id="@+id/menu_main_add_ingredient"/>
 

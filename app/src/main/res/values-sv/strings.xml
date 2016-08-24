@@ -4,4 +4,6 @@
     <string name="login_cancel_forgot_password">Annullera</string>
     <string name="login_login">Logga in</string>
     <string name="login_password">lösenord</string>
+    <string name="settings_delete_account_dialog_no">Nej</string>
+    <string name="settings_delete_account_dialog_yes">Ja</string>
 </resources>

@@ -164,10 +164,12 @@ public class TestActivity extends AppCompatActivity {
                 Intent addIngredientIntent = new Intent(this, AddIngredientActivity.class);
                 startActivity(addIngredientIntent);
                 break;
-
             case R.id.menu_main_toggle_premium:
                 togglePremium();
                 break;
+            case R.id.menu_main_suggest_recipe:
+                Intent suggestIntent = new Intent(this, SuggestRecipeActivity.class);
+                startActivity(suggestIntent);
         }
         return super.onOptionsItemSelected(item);
     }
